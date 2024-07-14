@@ -9,53 +9,119 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.style.height = "100%";
   canvas.style.zIndex = "-1";
 
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-
-  const shapes = [];
-  const numShapes = 20; // Increased number of shapes
+  let shapes = [];
+  const numShapes = 15;
   const colorSchemes = {
-    light: ["#3498db80", "#e74c3c80", "#2ecc7180", "#f39c1280", "#9b59b680"],
-    dark: ["#4db6ff80", "#ff6b6b80", "#50e3a480", "#ffc04d80", "#c37ee280"],
+    light: ["#c0c0c0", "#a8a8a8", "#d3d3d3", "#b0b0b0", "#e0e0e0"],
+    dark: ["#303030", "#404040", "#505050", "#606060", "#707070"],
   };
 
   let mouseX = 0;
   let mouseY = 0;
   let scrollY = 0;
 
-  const mousePushStrength = 0.08;
-  const shapeSpeed = 0.3;
+  const mousePushStrength = 1;
+  const shapeSpeed = 0.5;
   const scrollEffect = 0.003;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    createShapes();
+  }
+
+  // Perlin noise implementation
+  const perlin = {
+    rand_vect: function () {
+      let theta = Math.random() * 2 * Math.PI;
+      return { x: Math.cos(theta), y: Math.sin(theta) };
+    },
+    dot_prod_grid: function (x, y, vx, vy) {
+      let g_vect;
+      let d_vect = { x: x - vx, y: y - vy };
+      if (this.gradients[[vx, vy]]) {
+        g_vect = this.gradients[[vx, vy]];
+      } else {
+        g_vect = this.rand_vect();
+        this.gradients[[vx, vy]] = g_vect;
+      }
+      return d_vect.x * g_vect.x + d_vect.y * g_vect.y;
+    },
+    smootherstep: function (x) {
+      return 6 * x ** 5 - 15 * x ** 4 + 10 * x ** 3;
+    },
+    interp: function (x, a, b) {
+      return a + this.smootherstep(x) * (b - a);
+    },
+    seed: function () {
+      this.gradients = {};
+      this.memory = {};
+    },
+    get: function (x, y) {
+      if (this.memory.hasOwnProperty([x, y])) return this.memory[[x, y]];
+      let xf = Math.floor(x);
+      let yf = Math.floor(y);
+      //interpolate
+      let tl = this.dot_prod_grid(x, y, xf, yf);
+      let tr = this.dot_prod_grid(x, y, xf + 1, yf);
+      let bl = this.dot_prod_grid(x, y, xf, yf + 1);
+      let br = this.dot_prod_grid(x, y, xf + 1, yf + 1);
+      let xt = this.interp(x - xf, tl, tr);
+      let xb = this.interp(x - xf, bl, br);
+      let v = this.interp(y - yf, xt, xb);
+      this.memory[[x, y]] = v;
+      return v;
+    },
+  };
+  perlin.seed();
 
   class Shape {
     constructor() {
+      this.reset();
+    }
+
+    reset() {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 80 + 40; // Adjusted size range
-      this.speedX = (Math.random() - 0.5) * shapeSpeed;
-      this.speedY = (Math.random() - 0.5) * shapeSpeed;
+      this.baseRadius = Math.random() * 30 + 20;
       this.color =
         colorSchemes[
           document.body.classList.contains("dark-mode") ? "dark" : "light"
         ][Math.floor(Math.random() * 5)];
       this.rotation = 0;
-      this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+      this.rotationSpeed = (Math.random() - 0.5) * 0.01;
       this.parallaxFactor = Math.random() * 0.5 + 0.5;
-      this.shapeType = Math.floor(Math.random() * 3); // 0: rounded rect, 1: circle, 2: triangle
+      this.noiseOffsetX = Math.random() * 1000;
+      this.noiseOffsetY = Math.random() * 1000;
+      this.noiseOffsetRadius = Math.random() * 1000;
+      this.noiseStep = 0.02; // Increase this value (was 0.005)
+      this.morphSpeed = 0.4; // Add this new property
     }
 
     update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
+      this.noiseOffsetX += this.noiseStep;
+      this.noiseOffsetY += this.noiseStep;
+      this.noiseOffsetRadius += this.noiseStep * this.morphSpeed; // Modify this line
+
+      this.x += perlin.get(this.noiseOffsetX, 0) * shapeSpeed;
+      this.y += perlin.get(this.noiseOffsetY, 0) * shapeSpeed;
       this.rotation += this.rotationSpeed;
 
-      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      if (
+        this.x < -this.baseRadius ||
+        this.x > canvas.width + this.baseRadius
+      ) {
+        this.reset();
+        this.x = this.x < 0 ? canvas.width + this.baseRadius : -this.baseRadius;
+      }
+      if (
+        this.y < -this.baseRadius ||
+        this.y > canvas.height + this.baseRadius
+      ) {
+        this.reset();
+        this.y =
+          this.y < 0 ? canvas.height + this.baseRadius : -this.baseRadius;
+      }
 
       const dx = this.x - mouseX;
       const dy = this.y - mouseY;
@@ -68,103 +134,84 @@ document.addEventListener("DOMContentLoaded", function () {
         const pushX = Math.cos(angle) * force * mousePushStrength;
         const pushY = Math.sin(angle) * force * mousePushStrength;
 
-        this.speedX += pushX;
-        this.speedY += pushY;
-
-        const maxSpeed = 2;
-        const currentSpeed = Math.sqrt(
-          this.speedX * this.speedX + this.speedY * this.speedY
-        );
-        if (currentSpeed > maxSpeed) {
-          this.speedX = (this.speedX / currentSpeed) * maxSpeed;
-          this.speedY = (this.speedY / currentSpeed) * maxSpeed;
-        }
+        this.x += pushX;
+        this.y += pushY;
       }
 
-      this.speedX *= 0.99;
-      this.speedY *= 0.99;
-
       this.y += scrollY * scrollEffect * this.parallaxFactor;
-
-      if (this.y < -this.size) this.y = canvas.height + this.size;
-      if (this.y > canvas.height + this.size) this.y = -this.size;
     }
 
     draw() {
       ctx.save();
       ctx.translate(this.x, this.y);
       ctx.rotate(this.rotation);
-      ctx.fillStyle = this.color;
 
-      switch (this.shapeType) {
-        case 0:
-          this.drawRoundedRect();
-          break;
-        case 1:
-          this.drawCircle();
-          break;
-        case 2:
-          this.drawTriangle();
-          break;
+      const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.baseRadius);
+      gradient.addColorStop(0, this.color);
+      gradient.addColorStop(0.7, this.color);
+      gradient.addColorStop(1, adjustColor(this.color, -30));
+
+      ctx.fillStyle = gradient;
+
+      ctx.beginPath();
+      for (let angle = 0; angle < Math.PI * 2; angle += 0.1) {
+        const noiseValue = perlin.get(
+          this.noiseOffsetRadius + Math.cos(angle),
+          this.noiseOffsetRadius + Math.sin(angle)
+        );
+        const r = this.baseRadius * (1 + noiseValue * 0.1); // Increase this multiplier (was 0.2)
+        const x = r * Math.cos(angle);
+        const y = r * Math.sin(angle);
+        if (angle === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
       }
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.save();
+      ctx.clip();
+      const highlightGradient = ctx.createLinearGradient(
+        -this.baseRadius,
+        -this.baseRadius,
+        this.baseRadius,
+        this.baseRadius
+      );
+      highlightGradient.addColorStop(0, "rgba(255, 255, 255, 0.2)");
+      highlightGradient.addColorStop(0.5, "rgba(255, 255, 255, 0)");
+      ctx.fillStyle = highlightGradient;
+      ctx.fillRect(
+        -this.baseRadius,
+        -this.baseRadius,
+        this.baseRadius * 2,
+        this.baseRadius * 2
+      );
+      ctx.restore();
 
       ctx.restore();
     }
+  }
 
-    drawRoundedRect() {
-      const radius = this.size / 5;
-      ctx.beginPath();
-      ctx.moveTo(-this.size / 2 + radius, -this.size / 2);
-      ctx.arcTo(
-        this.size / 2,
-        -this.size / 2,
-        this.size / 2,
-        this.size / 2,
-        radius
-      );
-      ctx.arcTo(
-        this.size / 2,
-        this.size / 2,
-        -this.size / 2,
-        this.size / 2,
-        radius
-      );
-      ctx.arcTo(
-        -this.size / 2,
-        this.size / 2,
-        -this.size / 2,
-        -this.size / 2,
-        radius
-      );
-      ctx.arcTo(
-        -this.size / 2,
-        -this.size / 2,
-        this.size / 2,
-        -this.size / 2,
-        radius
-      );
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    drawCircle() {
-      ctx.beginPath();
-      ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    drawTriangle() {
-      ctx.beginPath();
-      ctx.moveTo(0, -this.size / 2);
-      ctx.lineTo(this.size / 2, this.size / 2);
-      ctx.lineTo(-this.size / 2, this.size / 2);
-      ctx.closePath();
-      ctx.fill();
-    }
+  function adjustColor(color, amount) {
+    return (
+      "#" +
+      color
+        .replace(/^#/, "")
+        .replace(/../g, (color) =>
+          (
+            "0" +
+            Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(
+              16
+            )
+          ).substr(-2)
+        )
+    );
   }
 
   function createShapes() {
-    shapes.length = 0;
+    shapes = [];
     for (let i = 0; i < numShapes; i++) {
       shapes.push(new Shape());
     }
@@ -186,9 +233,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.addEventListener("mousemove", updateMousePosition);
 
+  let resizeTimeout;
   window.addEventListener("resize", () => {
-    resizeCanvas();
-    createShapes();
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      resizeCanvas();
+    }, 250);
   });
 
   window.addEventListener("scroll", () => {
@@ -208,6 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  resizeCanvas();
   createShapes();
   updateShapes();
 });
