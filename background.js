@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const mousePushStrength = 1;
   const shapeSpeed = 0.5;
   const scrollEffect = 0.003;
+  const connectionDistance = 300; // Maximum distance for particle connection
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -94,8 +95,8 @@ document.addEventListener("DOMContentLoaded", function () {
       this.noiseOffsetX = Math.random() * 1000;
       this.noiseOffsetY = Math.random() * 1000;
       this.noiseOffsetRadius = Math.random() * 1000;
-      this.noiseStep = 0.02; // Increase this value (was 0.005)
-      this.morphSpeed = 0.4; // Add this new property
+      this.noiseStep = 0.02;
+      this.morphSpeed = 0.4;
     }
 
     update() {
@@ -217,8 +218,38 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function drawConnections() {
+    ctx.lineWidth = 2; // Increased line width from 1 to 2
+
+    for (let i = 0; i < shapes.length; i++) {
+      for (let j = i + 1; j < shapes.length; j++) {
+        const dx = shapes[i].x - shapes[j].x;
+        const dy = shapes[i].y - shapes[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < connectionDistance) {
+          // Calculate opacity based on distance
+          const opacity = 1 - distance / connectionDistance;
+
+          // Set stroke style based on the current theme
+          if (document.body.classList.contains("dark-mode")) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.3})`; // Increased max opacity to 0.3
+          } else {
+            ctx.strokeStyle = `rgba(0, 0, 0, ${opacity * 0.3})`; // Increased max opacity to 0.3
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(shapes[i].x, shapes[i].y);
+          ctx.lineTo(shapes[j].x, shapes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
   function updateShapes() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawConnections(); // Draw connections before shapes
     shapes.forEach((shape) => {
       shape.update();
       shape.draw();
