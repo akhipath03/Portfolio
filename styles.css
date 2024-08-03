@@ -303,15 +303,45 @@ input:checked + .slider:before {
   color: #fff;
 }
 
+/* Initial fade-in effect */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .fade-in.appear {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Reactive scrolling reveal effect */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal.active {
+  opacity: 1;
+}
+
+/* Reveal directions */
+.reveal.fade-bottom {
+  transform: translateY(40px);
+}
+
+.reveal.fade-left {
+  transform: translateX(-40px);
+}
+
+.reveal.fade-right {
+  transform: translateX(40px);
+}
+
+.reveal.fade-bottom.active,
+.reveal.fade-left.active,
+.reveal.fade-right.active {
+  transform: translate(0);
 }
 
 /* Icon styles */

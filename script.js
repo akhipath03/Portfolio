@@ -39,30 +39,36 @@ window.addEventListener("scroll", () => {
   header.classList.toggle("scrolled", window.scrollY > 50);
 });
 
-// Fade-in effect for sections
-const faders = document.querySelectorAll(".fade-in");
-const appearOptions = {
-  threshold: 0.1,
-  rootMargin: "0px 0px -100px 0px",
-};
+// Initial fade-in effect
+document.addEventListener("DOMContentLoaded", (event) => {
+  const faders = document.querySelectorAll(".fade-in");
 
-const appearOnScroll = new IntersectionObserver(function (
-  entries,
-  appearOnScroll
-) {
-  entries.forEach((entry) => {
-    if (!entry.isIntersecting) {
-      return;
-    } else {
-      entry.target.classList.add("appear");
-      appearOnScroll.unobserve(entry.target);
-    }
+  faders.forEach((fader) => {
+    fader.classList.add("appear");
   });
-},
-appearOptions);
+});
 
-faders.forEach((fader) => {
-  appearOnScroll.observe(fader);
+// Reactive scrolling fade in/out effect
+const revealElements = document.querySelectorAll(".reveal");
+
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+      } else {
+        entry.target.classList.remove("active");
+      }
+    });
+  },
+  {
+    threshold: 0.15, // Adjust this value to control when the reveal happens
+    rootMargin: "0px 0px -100px 0px", // Adjust this to fine-tune the reveal point
+  }
+);
+
+revealElements.forEach((element) => {
+  revealObserver.observe(element);
 });
 
 // Dark mode toggle
