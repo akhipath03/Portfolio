@@ -1,6 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap");
 
 :root {
+  --primary-color: #4db6ff;
+  --secondary-color: #34495e;
+  --text-color: #f4f4f4;
+  --background-color: #121212;
+  --link-color: #ff6b6b;
+  --card-background: #1e1e1e;
+  --project-card-background: #2a2a2a;
+}
+
+/* Light mode colors */
+[data-theme="light"] {
   --primary-color: #3498db;
   --secondary-color: #2c3e50;
   --text-color: #333;
@@ -8,16 +19,6 @@
   --link-color: #e74c3c;
   --card-background: #ffffff;
   --project-card-background: #ffffff;
-}
-
-.dark-mode {
-  --primary-color: #4db6ff;
-  --secondary-color: #34495e;
-  --text-color: #f4f4f4;
-  --background-color: #000000;
-  --link-color: #ff6b6b;
-  --card-background: #333333;
-  --project-card-background: #444444;
 }
 
 * {
@@ -259,7 +260,7 @@ footer {
 }
 
 .slider {
-  background-color: #ccc;
+  background-color: #4db6ff;
   bottom: 0;
   cursor: pointer;
   left: 0;
@@ -270,7 +271,7 @@ footer {
 }
 
 .slider:before {
-  background-color: #fff;
+  background-color: #f4f4f4;
   bottom: 4px;
   content: "";
   height: 26px;
