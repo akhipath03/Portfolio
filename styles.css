@@ -8,6 +8,7 @@
   --link-color: #ff6b6b;
   --card-background: #1e1e1e;
   --project-card-background: #2a2a2a;
+  --slider-color: #f4f4f4;
 }
 
 /* Light mode colors */
@@ -15,7 +16,7 @@
   --primary-color: #3498db;
   --secondary-color: #2c3e50;
   --text-color: #333;
-  --background-color: #f4f4f4;
+  --background-color: #f4f4f4ef;
   --link-color: #e74c3c;
   --card-background: #ffffff;
   --project-card-background: #ffffff;
@@ -260,7 +261,7 @@ footer {
 }
 
 .slider {
-  background-color: #4db6ff;
+  background-color: #f4f4f4;
   bottom: 0;
   cursor: pointer;
   left: 0;
@@ -271,7 +272,7 @@ footer {
 }
 
 .slider:before {
-  background-color: #f4f4f4;
+  background-color: #4db6ff;
   bottom: 4px;
   content: "";
   height: 26px;
@@ -282,7 +283,7 @@ footer {
 }
 
 input:checked + .slider {
-  background-color: var(--primary-color);
+  background-color: var(--slider-color);
 }
 
 input:checked + .slider:before {
@@ -404,6 +405,150 @@ nav ul li a .fas {
 
 #about p .fas {
   margin-top: 0.2rem; /* Align icon with the first line of text */
+}
+
+/* Resume section styles */
+.timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+.timeline::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  background-color: var(--primary-color);
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -3px;
+}
+
+.timeline-item {
+  padding: 10px 40px;
+  position: relative;
+  background-color: inherit;
+  width: 50%;
+}
+
+.timeline-item::after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: -17px;
+  background-color: var(--background-color);
+  border: 4px solid var(--primary-color);
+  top: 15px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  left: 50%;
+}
+
+.left::before {
+  content: " ";
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  right: 30px;
+  border: medium solid var(--primary-color);
+  border-width: 10px 0 10px 10px;
+  border-color: transparent transparent transparent var(--primary-color);
+}
+
+.right::before {
+  content: " ";
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  left: 30px;
+  border: medium solid var(--primary-color);
+  border-width: 10px 10px 10px 0;
+  border-color: transparent var(--primary-color) transparent transparent;
+}
+
+.right::after {
+  left: -16px;
+}
+
+.timeline-content {
+  padding: 20px 30px;
+  background-color: var(--card-background);
+  position: relative;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+  background-color: var(--project-card-background);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-content h3 {
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.timeline-content .date {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--text-color);
+}
+
+.timeline-content .details {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.timeline-content:hover .details {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.timeline-content ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 15px;
+}
+
+.timeline-content ul li {
+  margin-bottom: 5px;
+}
+
+.resume-download {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.download-btn {
+  display: inline-block;
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: var(--secondary-color);
 }
 
 @media (max-width: 768px) {
