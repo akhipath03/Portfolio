@@ -24,11 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const shapeSpeed = 0.5;
   const scrollEffect = 0.002;
   const connectionDistance = 300; // Maximum distance for particle connection
+  const minDistance = 70; // Minimum distance between shapes
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    createShapes();
   }
 
   // Perlin noise implementation
@@ -193,6 +193,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
       ctx.restore();
     }
+
+    handleCollisions(shapes) {
+      for (let other of shapes) {
+        if (this === other) continue;
+
+        const dx = this.x - other.x;
+        const dy = this.y - other.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < minDistance) {
+          const angle = Math.atan2(dy, dx);
+          const pushDistance = (minDistance - distance) / 2;
+
+          this.x += Math.cos(angle) * pushDistance;
+          this.y += Math.sin(angle) * pushDistance;
+          other.x -= Math.cos(angle) * pushDistance;
+          other.y -= Math.sin(angle) * pushDistance;
+        }
+      }
+    }
   }
 
   function adjustColor(color, amount) {
@@ -250,6 +270,12 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateShapes() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawConnections(); // Draw connections before shapes
+
+    // Handle collisions
+    for (let i = 0; i < shapes.length; i++) {
+      shapes[i].handleCollisions(shapes.slice(i + 1));
+    }
+
     shapes.forEach((shape) => {
       shape.update();
       shape.draw();
