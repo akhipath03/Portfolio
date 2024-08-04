@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
   let mouseY = 0;
   let scrollY = 0;
 
-  const mousePushStrength = 1;
+  const mousePushStrength = 2;
   const shapeSpeed = 0.5;
-  const scrollEffect = 0.003;
+  const scrollEffect = 0.002;
   const connectionDistance = 300; // Maximum distance for particle connection
 
   function resizeCanvas() {
