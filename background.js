@@ -179,8 +179,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const dx = this.x - mouseX;
         const dy = this.y - mouseY;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const maxDistance = 900; // Increased from 150 to 500
-        const maxForce = 0.2; // Increased from 2 to 3 for stronger attraction
+        const maxDistance = 600; // Increased from 150 to 500
+        const maxForce = 0.25; // Increased from 2 to 3 for stronger attraction
 
         if (distance < maxDistance) {
           const force = Math.min(maxForce, (maxDistance - distance) / maxDistance);

@@ -150,11 +150,9 @@ h2 {
   transform: translate(-50%, -50%);
   width: 500px;
   height: 500px;
-  background: radial-gradient(
-    circle closest-side,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
+  background: radial-gradient(circle closest-side,
+      rgba(255, 255, 255, 0.1),
+      transparent);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -282,11 +280,11 @@ footer {
   width: 26px;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: var(--slider-color);
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(26px);
 }
 
@@ -400,11 +398,13 @@ nav ul li a .fas {
 #about p {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 1rem; /* Add some space between paragraphs */
+  margin-bottom: 1rem;
+  /* Add some space between paragraphs */
 }
 
 #about p .fas {
-  margin-top: 0.2rem; /* Align icon with the first line of text */
+  margin-top: 0.2rem;
+  /* Align icon with the first line of text */
 }
 
 /* Resume section styles */
