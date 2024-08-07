@@ -20,11 +20,14 @@ document.addEventListener("DOMContentLoaded", function () {
   let mouseY = 0;
   let scrollY = 0;
 
-  const mousePushStrength = 2;
+  const mousePushStrength = 2.5;
   const shapeSpeed = 0.5;
   const scrollEffect = 0.002;
   const connectionDistance = 300;
   const minDistance = 70;
+
+  // New variables for enhanced features
+  let isMouseDown = false;
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -114,6 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.noiseOffsetRadius = Math.random() * 1000;
       this.noiseStep = 0.02;
       this.morphSpeed = 0.4;
+      this.velocity = { x: 0, y: 0 };
 
       if (!gradients[this.color]) {
         gradients[this.color] = createGradient(this.color);
@@ -123,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
     update() {
       this.noiseOffsetX += this.noiseStep;
       this.noiseOffsetY += this.noiseStep;
-      this.noiseOffsetRadius += this.noiseStep * this.morphSpeed; // Modify this line
+      this.noiseOffsetRadius += this.noiseStep * this.morphSpeed;
 
       this.x += perlin.get(this.noiseOffsetX, 0) * shapeSpeed;
       this.y += perlin.get(this.noiseOffsetY, 0) * shapeSpeed;
@@ -161,6 +165,31 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       this.y += scrollY * scrollEffect * this.parallaxFactor;
+
+      // Apply velocity
+      this.x += this.velocity.x;
+      this.y += this.velocity.y;
+
+      // Apply friction
+      this.velocity.x *= 0.98;
+      this.velocity.y *= 0.98;
+
+      // Handle attraction mode (when mouse is held down)
+      if (isMouseDown) {
+        const dx = this.x - mouseX;
+        const dy = this.y - mouseY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const maxDistance = 900; // Increased from 150 to 500
+        const maxForce = 0.2; // Increased from 2 to 3 for stronger attraction
+
+        if (distance < maxDistance) {
+          const force = Math.min(maxForce, (maxDistance - distance) / maxDistance);
+          const angle = Math.atan2(dy, dx);
+
+          this.velocity.x -= Math.cos(angle) * force;
+          this.velocity.y -= Math.sin(angle) * force;
+        }
+      }
     }
 
     draw() {
@@ -236,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function drawConnections() {
-    ctx.lineWidth = 2; // Increased line width from 1 to 2
+    ctx.lineWidth = 2;
 
     for (let i = 0; i < shapes.length; i++) {
       for (let j = i + 1; j < shapes.length; j++) {
@@ -245,14 +274,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < connectionDistance) {
-          // Calculate opacity based on distance
           const opacity = 1 - distance / connectionDistance;
 
-          // Set stroke style based on the current theme
           if (document.body.classList.contains("dark-mode")) {
-            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.3})`; // Increased max opacity to 0.3
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.3})`;
           } else {
-            ctx.strokeStyle = `rgba(0, 0, 0, ${opacity * 0.3})`; // Increased max opacity to 0.3
+            ctx.strokeStyle = `rgba(0, 0, 0, ${opacity * 0.3})`;
           }
 
           ctx.beginPath();
@@ -263,6 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }
+
   let animationFrameId = null;
 
   function updateShapes() {
@@ -277,6 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
       shape.update();
       shape.draw();
     });
+
     animationFrameId = requestAnimationFrame(updateShapes);
   }
 
@@ -286,6 +315,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.addEventListener("mousemove", updateMousePosition);
+  document.addEventListener("mousedown", () => isMouseDown = true);
+  document.addEventListener("mouseup", () => isMouseDown = false);
 
   let resizeTimeout;
   window.addEventListener("resize", () => {
@@ -318,7 +349,6 @@ document.addEventListener("DOMContentLoaded", function () {
   resizeCanvas();
   createShapes();
 
-  // Cancel any existing animation frame before starting a new one
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }
