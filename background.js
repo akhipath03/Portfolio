@@ -20,19 +20,24 @@ document.addEventListener("DOMContentLoaded", function () {
   let mouseY = 0;
   let scrollY = 0;
 
-  const mousePushStrength = 2;
+  const mousePushStrength = 2.5;
   const shapeSpeed = 0.5;
   const scrollEffect = 0.002;
-  const connectionDistance = 300; // Maximum distance for particle connection
-  const minDistance = 70; // Minimum distance between shapes
+  const connectionDistance = 300;
+  const minDistance = 70;
+
+  // New variables for enhanced features
+  let isMouseDown = false;
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
 
-  // Perlin noise implementation
+  // Optimized Perlin noise implementation
   const perlin = {
+    gradients: {},
+    memory: new Map(),
     rand_vect: function () {
       let theta = Math.random() * 2 * Math.PI;
       return { x: Math.cos(theta), y: Math.sin(theta) };
@@ -56,10 +61,11 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     seed: function () {
       this.gradients = {};
-      this.memory = {};
+      this.memory.clear();
     },
     get: function (x, y) {
-      if (this.memory.hasOwnProperty([x, y])) return this.memory[[x, y]];
+      const key = `${x},${y}`;
+      if (this.memory.has(key)) return this.memory.get(key);
       let xf = Math.floor(x);
       let yf = Math.floor(y);
       //interpolate
@@ -70,11 +76,25 @@ document.addEventListener("DOMContentLoaded", function () {
       let xt = this.interp(x - xf, tl, tr);
       let xb = this.interp(x - xf, bl, br);
       let v = this.interp(y - yf, xt, xb);
-      this.memory[[x, y]] = v;
+      this.memory.set(key, v);
+      if (this.memory.size > 1000) {
+        const firstKey = this.memory.keys().next().value;
+        this.memory.delete(firstKey);
+      }
       return v;
     },
   };
   perlin.seed();
+
+  // Pre-create gradients
+  const gradients = {};
+  function createGradient(color) {
+    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 50);
+    gradient.addColorStop(0, color);
+    gradient.addColorStop(0.7, color);
+    gradient.addColorStop(1, adjustColor(color, -30));
+    return gradient;
+  }
 
   class Shape {
     constructor() {
@@ -87,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.baseRadius = Math.random() * 30 + 20;
       this.color =
         colorSchemes[
-          document.body.classList.contains("dark-mode") ? "dark" : "light"
+        document.body.classList.contains("dark-mode") ? "dark" : "light"
         ][Math.floor(Math.random() * 5)];
       this.rotation = 0;
       this.rotationSpeed = (Math.random() - 0.5) * 0.01;
@@ -97,12 +117,17 @@ document.addEventListener("DOMContentLoaded", function () {
       this.noiseOffsetRadius = Math.random() * 1000;
       this.noiseStep = 0.02;
       this.morphSpeed = 0.4;
+      this.velocity = { x: 0, y: 0 };
+
+      if (!gradients[this.color]) {
+        gradients[this.color] = createGradient(this.color);
+      }
     }
 
     update() {
       this.noiseOffsetX += this.noiseStep;
       this.noiseOffsetY += this.noiseStep;
-      this.noiseOffsetRadius += this.noiseStep * this.morphSpeed; // Modify this line
+      this.noiseOffsetRadius += this.noiseStep * this.morphSpeed;
 
       this.x += perlin.get(this.noiseOffsetX, 0) * shapeSpeed;
       this.y += perlin.get(this.noiseOffsetY, 0) * shapeSpeed;
@@ -140,6 +165,31 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       this.y += scrollY * scrollEffect * this.parallaxFactor;
+
+      // Apply velocity
+      this.x += this.velocity.x;
+      this.y += this.velocity.y;
+
+      // Apply friction
+      this.velocity.x *= 0.98;
+      this.velocity.y *= 0.98;
+
+      // Handle attraction mode (when mouse is held down)
+      if (isMouseDown) {
+        const dx = this.x - mouseX;
+        const dy = this.y - mouseY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const maxDistance = 900; // Increased from 150 to 500
+        const maxForce = 0.2; // Increased from 2 to 3 for stronger attraction
+
+        if (distance < maxDistance) {
+          const force = Math.min(maxForce, (maxDistance - distance) / maxDistance);
+          const angle = Math.atan2(dy, dx);
+
+          this.velocity.x -= Math.cos(angle) * force;
+          this.velocity.y -= Math.sin(angle) * force;
+        }
+      }
     }
 
     draw() {
@@ -147,12 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.translate(this.x, this.y);
       ctx.rotate(this.rotation);
 
-      const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.baseRadius);
-      gradient.addColorStop(0, this.color);
-      gradient.addColorStop(0.7, this.color);
-      gradient.addColorStop(1, adjustColor(this.color, -30));
-
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = gradients[this.color];
 
       ctx.beginPath();
       for (let angle = 0; angle < Math.PI * 2; angle += 0.1) {
@@ -160,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
           this.noiseOffsetRadius + Math.cos(angle),
           this.noiseOffsetRadius + Math.sin(angle)
         );
-        const r = this.baseRadius * (1 + noiseValue * 0.1); // Increase this multiplier (was 0.2)
+        const r = this.baseRadius * (1 + noiseValue * 0.1);
         const x = r * Math.cos(angle);
         const y = r * Math.sin(angle);
         if (angle === 0) {
@@ -171,25 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       ctx.closePath();
       ctx.fill();
-
-      ctx.save();
-      ctx.clip();
-      const highlightGradient = ctx.createLinearGradient(
-        -this.baseRadius,
-        -this.baseRadius,
-        this.baseRadius,
-        this.baseRadius
-      );
-      highlightGradient.addColorStop(0, "rgba(255, 255, 255, 0.2)");
-      highlightGradient.addColorStop(0.5, "rgba(255, 255, 255, 0)");
-      ctx.fillStyle = highlightGradient;
-      ctx.fillRect(
-        -this.baseRadius,
-        -this.baseRadius,
-        this.baseRadius * 2,
-        this.baseRadius * 2
-      );
-      ctx.restore();
 
       ctx.restore();
     }
@@ -239,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function drawConnections() {
-    ctx.lineWidth = 2; // Increased line width from 1 to 2
+    ctx.lineWidth = 2;
 
     for (let i = 0; i < shapes.length; i++) {
       for (let j = i + 1; j < shapes.length; j++) {
@@ -248,14 +274,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < connectionDistance) {
-          // Calculate opacity based on distance
           const opacity = 1 - distance / connectionDistance;
 
-          // Set stroke style based on the current theme
           if (document.body.classList.contains("dark-mode")) {
-            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.3})`; // Increased max opacity to 0.3
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.3})`;
           } else {
-            ctx.strokeStyle = `rgba(0, 0, 0, ${opacity * 0.3})`; // Increased max opacity to 0.3
+            ctx.strokeStyle = `rgba(0, 0, 0, ${opacity * 0.3})`;
           }
 
           ctx.beginPath();
@@ -267,11 +291,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  let animationFrameId = null;
+
   function updateShapes() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawConnections(); // Draw connections before shapes
+    drawConnections();
 
-    // Handle collisions
     for (let i = 0; i < shapes.length; i++) {
       shapes[i].handleCollisions(shapes.slice(i + 1));
     }
@@ -280,7 +305,8 @@ document.addEventListener("DOMContentLoaded", function () {
       shape.update();
       shape.draw();
     });
-    requestAnimationFrame(updateShapes);
+
+    animationFrameId = requestAnimationFrame(updateShapes);
   }
 
   function updateMousePosition(event) {
@@ -289,6 +315,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.addEventListener("mousemove", updateMousePosition);
+  document.addEventListener("mousedown", () => isMouseDown = true);
+  document.addEventListener("mouseup", () => isMouseDown = false);
 
   let resizeTimeout;
   window.addEventListener("resize", () => {
@@ -312,10 +340,17 @@ document.addEventListener("DOMContentLoaded", function () {
       : "light";
     shapes.forEach((shape) => {
       shape.color = colorSchemes[mode][Math.floor(Math.random() * 5)];
+      if (!gradients[shape.color]) {
+        gradients[shape.color] = createGradient(shape.color);
+      }
     });
   });
 
   resizeCanvas();
   createShapes();
+
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
   updateShapes();
 });
