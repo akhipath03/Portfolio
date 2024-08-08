@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Canvas setup
   const canvas = document.getElementById("background-canvas");
   const ctx = canvas.getContext("2d");
   const resetButton = document.getElementById("reset-particles");
@@ -11,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.style.height = "100%";
   canvas.style.zIndex = "-1";
 
+  // Global variables
   let shapes = [];
   const numShapes = 15;
   const colorSchemes = {
@@ -21,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let mouseX = 0;
   let mouseY = 0;
   let scrollY = 0;
+  let isMouseDown = false;
 
   const mousePushStrength = 2.5;
   const shapeSpeed = 0.3;
@@ -28,15 +31,40 @@ document.addEventListener("DOMContentLoaded", function () {
   const connectionDistance = 300;
   const minDistance = 70;
 
-  // New variables for enhanced features
-  let isMouseDown = false;
+  let animationFrameId = null;
+  const gradients = {};
 
+  // Utility functions
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
 
-  // Optimized Perlin noise implementation
+  function adjustColor(color, amount) {
+    return (
+      "#" +
+      color
+        .replace(/^#/, "")
+        .replace(/../g, (color) =>
+          (
+            "0" +
+            Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(
+              16
+            )
+          ).substr(-2)
+        )
+    );
+  }
+
+  function createGradient(color) {
+    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 50);
+    gradient.addColorStop(0, color);
+    gradient.addColorStop(0.7, color);
+    gradient.addColorStop(1, adjustColor(color, -30));
+    return gradient;
+  }
+
+  // Perlin noise implementation
   const perlin = {
     gradients: {},
     memory: new Map(),
@@ -88,16 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
   perlin.seed();
 
-  // Pre-create gradients
-  const gradients = {};
-  function createGradient(color) {
-    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 50);
-    gradient.addColorStop(0, color);
-    gradient.addColorStop(0.7, color);
-    gradient.addColorStop(1, adjustColor(color, -30));
-    return gradient;
-  }
-
+  // Shape class
   class Shape {
     constructor() {
       this.reset();
@@ -240,22 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function adjustColor(color, amount) {
-    return (
-      "#" +
-      color
-        .replace(/^#/, "")
-        .replace(/../g, (color) =>
-          (
-            "0" +
-            Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(
-              16
-            )
-          ).substr(-2)
-        )
-    );
-  }
-
+  // Shape and connection functions
   function createShapes() {
     shapes = [];
     for (let i = 0; i < numShapes; i++) {
@@ -290,8 +294,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  let animationFrameId = null;
-
   function updateShapes() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawConnections();
@@ -308,6 +310,12 @@ document.addEventListener("DOMContentLoaded", function () {
     animationFrameId = requestAnimationFrame(updateShapes);
   }
 
+  function resetParticles() {
+    shapes.forEach(shape => shape.reset());
+    perlin.seed();
+  }
+
+  // Event listeners
   function updateMousePosition(event) {
     mouseX = event.clientX;
     mouseY = event.clientY;
@@ -345,11 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  function resetParticles() {
-    shapes.forEach(shape => shape.reset());
-    perlin.seed();
-  }
-
+  // Initialization
   resizeCanvas();
   createShapes();
 
