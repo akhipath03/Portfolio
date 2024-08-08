@@ -75,44 +75,23 @@ revealElements.forEach((element) => {
   revealObserver.observe(element);
 });
 
-// Timeline data
-const timelineData = [
-  {
-    date: "June 2024 – Present",
-    title: "CostarGroup | Data Analyst Intern",
-    description: [
-      "Utilized SQL in SSMS and Snowflake to analyze usage patterns and predict user activity",
-      "Created a Python script to fetch data from Snowflake and integrate it into SSMS",
-      "Implemented Isolation Forest for usage anomaly detection",
-      "Developed detailed visualizations of usage trends and performed statistical analyses",
-      "Presented data-driven insights and actionable recommendations to management",
-    ],
-  },
-  {
-    date: "March 2024 – June 2024",
-    title:
-      "Hudson Institute | Center for Defense Concepts and Technology Spring Intern",
-    description: [
-      "Developed a war game simulation project with a GUI for data management and simulation outcomes",
-      "Created a GUI budget tool for Excel integration",
-      "Implemented backend functionality to dynamically update values based on simulation results",
-      "Designed a map visualization tool to display troop movements and outcomes during simulated turns",
-    ],
-  },
-  {
-    date: "May 2025",
-    title: "College of William and Mary",
-    description: [
-      "B.S in Data Science, Minor in Mathematics",
-      "GPA: 3.95",
-      "Relevant Coursework: Algorithms, Data Structures, Probability & Statistics for Scientists, Advanced Applied Machine Learning, Statistical Data Analysis, Data Visualization, Databases, Linear Algebra, Discrete Mathematics",
-    ],
-  },
-];
+// Fetch timeline data from JSON file
+async function getTimelineData() {
+  try {
+    const response = await fetch('timeline.json');
+    const data = await response.json();
+    return data.timelineData;
+  } catch (error) {
+    console.error('Error fetching timeline data:', error);
+    return [];
+  }
+}
 
 // Create timeline
-function createTimeline() {
+async function createTimeline() {
   const timeline = document.querySelector(".timeline");
+  const timelineData = await getTimelineData();
+
   timelineData.forEach((item, index) => {
     const timelineItem = document.createElement("div");
     timelineItem.classList.add("timeline-item");
