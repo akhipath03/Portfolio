@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("background-canvas");
   const ctx = canvas.getContext("2d");
+  const resetButton = document.getElementById("reset-particles");
+  resetButton.addEventListener("click", resetParticles);
 
   canvas.style.position = "fixed";
   canvas.style.top = "0";
@@ -21,8 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let scrollY = 0;
 
   const mousePushStrength = 2.5;
-  const shapeSpeed = 0.5;
-  const scrollEffect = 0.002;
+  const shapeSpeed = 0.3;
+  const scrollEffect = 0.0015;
   const connectionDistance = 300;
   const minDistance = 70;
 
@@ -105,10 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
       this.baseRadius = Math.random() * 30 + 20;
-      this.color =
-        colorSchemes[
-        document.body.classList.contains("dark-mode") ? "dark" : "light"
-        ][Math.floor(Math.random() * 5)];
+      this.color = colorSchemes[document.body.classList.contains("dark-mode") ? "dark" : "light"][Math.floor(Math.random() * 5)];
       this.rotation = 0;
       this.rotationSpeed = (Math.random() - 0.5) * 0.01;
       this.parallaxFactor = Math.random() * 0.5 + 0.5;
@@ -345,6 +344,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  function resetParticles() {
+    shapes.forEach(shape => shape.reset());
+    perlin.seed();
+  }
 
   resizeCanvas();
   createShapes();
