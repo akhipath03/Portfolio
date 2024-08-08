@@ -357,7 +357,7 @@ nav ul li a .fas {
 .social-icons a {
   font-size: 1.8rem;
   margin-right: 1rem;
-  color: var(--text-color);
+  color: var(--link-color);
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
