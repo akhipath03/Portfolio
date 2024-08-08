@@ -32,6 +32,7 @@ This portfolio website is designed to provide a visually appealing and interacti
 6. **Dark Mode Toggle**: The website supports a dark mode theme, which can be toggled by the user.
 
 ## File Structure
+<div>
 
 data-science-portfolio/
 ├── documents/
@@ -43,6 +44,8 @@ data-science-portfolio/
 │   ├── resume.pdf
 │   └── resume.docx
 └── README.md
+
+</div>
 
 - `documents/`: Contains the main HTML, CSS, and JavaScript files that make up the portfolio website.
 - `assets/`: Stores the resume files in PDF and DOCX formats.
