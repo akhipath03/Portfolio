@@ -10,7 +10,6 @@
   --project-card-background: #ffffff;
 }
 
-/* Light mode colors */
 [data-theme="dark"] {
   --primary-color: #4db6ff;
   --secondary-color: #34495e;
@@ -49,6 +48,7 @@ body {
   z-index: -1;
 }
 
+/* Header and Navigation */
 header {
   background-color: var(--secondary-color);
   padding: 1rem;
@@ -130,6 +130,7 @@ nav ul li button#reset-particles i {
   font-size: 1.1rem;
 }
 
+/* Main Content */
 main {
   max-width: 1200px;
   margin: 80px auto 0;
@@ -159,6 +160,18 @@ h2 {
   font-size: 2rem;
 }
 
+/* About Section */
+#about p {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+#about p .fas {
+  margin-top: 0.2rem;
+}
+
+/* Projects Section */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -202,7 +215,8 @@ h2 {
 }
 
 .project-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   margin-top: 1rem;
   color: var(--link-color);
   text-decoration: none;
@@ -234,216 +248,7 @@ h2 {
   color: var(--primary-color);
 }
 
-.social-icons {
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 1rem;
-}
-
-.social-icons a {
-  color: var(--text-color);
-  font-size: 1.5rem;
-  margin-right: 1rem;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.social-icons a:hover {
-  color: var(--primary-color);
-  transform: scale(1.2);
-}
-
-.github-link {
-  display: inline-flex;
-  align-items: center;
-  color: var(--link-color);
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-.github-link i {
-  margin-right: 0.5rem;
-}
-
-.github-link:hover {
-  color: var(--primary-color);
-}
-
-footer {
-  background-color: var(--secondary-color);
-  color: #fff;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 2rem;
-}
-
-.theme-switch-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-.theme-switch {
-  display: inline-block;
-  height: 27px;
-  position: relative;
-  width: 56px;
-}
-
-.theme-switch input {
-  display: none;
-}
-
-.slider {
-  background-color: #f4f4f4;
-  bottom: 0;
-  cursor: pointer;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: 0.4s;
-}
-
-.slider:before {
-  background-color: #4db6ff;
-  bottom: 3px;
-  content: "";
-  height: 21px;
-  left: 4px;
-  position: absolute;
-  transition: 0.4s;
-  width: 21px;
-}
-
-input:checked+.slider {
-  background-color: #4db6ff;
-}
-
-input:checked+.slider:before {
-  background-color: #ffffff;
-  transform: translateX(26px);
-}
-
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.theme-switch-wrapper em {
-  margin-left: 10px;
-  font-size: 1.05rem;
-  color: #fff;
-}
-
-/* Initial fade-in effect */
-.fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.fade-in.appear {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Reactive scrolling reveal effect */
-.reveal {
-  opacity: 0;
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.reveal.active {
-  opacity: 1;
-}
-
-/* Reveal directions */
-.reveal.fade-bottom {
-  transform: translateY(40px);
-}
-
-.reveal.fade-left {
-  transform: translateX(-40px);
-}
-
-.reveal.fade-right {
-  transform: translateX(40px);
-}
-
-.reveal.fade-bottom.active,
-.reveal.fade-left.active,
-.reveal.fade-right.active {
-  transform: translate(0);
-}
-
-/* Icon styles */
-.fas,
-.fab {
-  margin-right: 0.5rem;
-}
-
-nav ul li a .fas {
-  font-size: 1.1rem;
-}
-
-.social-icons a {
-  font-size: 1.8rem;
-  margin-right: 1rem;
-  color: var(--link-color);
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.social-icons a:hover {
-  color: var(--primary-color);
-  transform: scale(1.2);
-}
-
-.project-card h3 .fas {
-  color: var(--primary-color);
-}
-
-.github-link .fab {
-  font-size: 1.2rem;
-}
-
-/* Dark mode icon */
-.theme-switch-wrapper .fas {
-  font-size: 1.2rem;
-  vertical-align: middle;
-}
-
-/* Project link icon */
-.project-link .fas {
-  margin-left: 0.3rem;
-}
-
-/* Adjust existing styles */
-.project-link {
-  display: inline-flex;
-  align-items: center;
-}
-
-.github-link {
-  display: inline-flex;
-  align-items: center;
-}
-
-#about p {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  /* Add some space between paragraphs */
-}
-
-#about p .fas {
-  margin-top: 0.2rem;
-  /* Align icon with the first line of text */
-}
-
-/* Resume section styles */
+/* Resume Section */
 .timeline {
   position: relative;
   max-width: 800px;
@@ -587,6 +392,181 @@ nav ul li a .fas {
   background-color: var(--secondary-color);
 }
 
+/* Footer */
+footer {
+  background-color: var(--secondary-color);
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* Social Icons */
+.social-icons {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+.social-icons a {
+  font-size: 1.8rem;
+  margin-right: 1rem;
+  color: var(--link-color);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: var(--primary-color);
+  transform: scale(1.2);
+}
+
+/* GitHub Link */
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.github-link i {
+  margin-right: 0.5rem;
+}
+
+.github-link:hover {
+  color: var(--primary-color);
+}
+
+/* Theme Switch */
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.theme-switch {
+  display: inline-block;
+  height: 27px;
+  position: relative;
+  width: 56px;
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.slider {
+  background-color: #f4f4f4;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 0.4s;
+}
+
+.slider:before {
+  background-color: #4db6ff;
+  bottom: 3px;
+  content: "";
+  height: 21px;
+  left: 4px;
+  position: absolute;
+  transition: 0.4s;
+  width: 21px;
+}
+
+input:checked+.slider {
+  background-color: #4db6ff;
+}
+
+input:checked+.slider:before {
+  background-color: #ffffff;
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.theme-switch-wrapper em {
+  margin-left: 10px;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+/* Animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.appear {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal {
+  opacity: 0;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal.active {
+  opacity: 1;
+}
+
+.reveal.fade-bottom {
+  transform: translateY(40px);
+}
+
+.reveal.fade-left {
+  transform: translateX(-40px);
+}
+
+.reveal.fade-right {
+  transform: translateX(40px);
+}
+
+.reveal.fade-bottom.active,
+.reveal.fade-left.active,
+.reveal.fade-right.active {
+  transform: translate(0);
+}
+
+/* Icon styles */
+.fas,
+.fab {
+  margin-right: 0.5rem;
+}
+
+nav ul li a .fas {
+  font-size: 1.1rem;
+}
+
+.project-card h3 .fas {
+  color: var(--primary-color);
+}
+
+.github-link .fab {
+  font-size: 1.2rem;
+}
+
+.theme-switch-wrapper .fas {
+  font-size: 1.2rem;
+  vertical-align: middle;
+}
+
+.project-link .fas {
+  margin-left: 0.3rem;
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
   header {
     flex-direction: column;
