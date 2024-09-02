@@ -81,7 +81,7 @@ const timelineData = [
       "Created a Python script to fetch data from Snowflake and integrate it into SSMS",
       "Implemented Isolation Forest for usage anomaly detection",
       "Developed detailed visualizations of usage trends and performed statistical analyses",
-      "Presented data-driven insights and actionable recommendations to management",
+      "Led a project to create a machine learning model to classify office building images by their architectural style, introducing a new dimension for property discovery.",
     ],
   },
   {
