@@ -1,225 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Akhilesh Pathange - Data Science Portfolio</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-  </head>
-  <body>
-    <canvas id="background-canvas"></canvas>
-    <header>
-      <nav>
-        <ul>
-          <li>
-            <a href="#home"><i class="fas fa-home"></i> Home</a>
-          </li>
-          <li>
-            <a href="#about"><i class="fas fa-user"></i> About</a>
-          </li>
-          <li>
-            <a href="#projects"
-              ><i class="fas fa-project-diagram"></i> Projects</a
-            >
-          </li>
-          <li>
-            <a href="#resume"><i class="fas fa-file-alt"></i> Resume</a>
-          </li>
-        </ul>
-      </nav>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-          <input type="checkbox" id="checkbox" />
-          <div class="slider round"></div>
-        </label>
-        <em><i class="fas fa-moon"></i> Dark Mode</em>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akhilesh Pathange - Data Science Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+  <canvas id="background-canvas"></canvas>
+  <header>
+    <nav>
+      <ul>
+        <li>
+          <a href="#home"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li>
+          <a href="#about"><i class="fas fa-user"></i> About</a>
+        </li>
+        <li>
+          <a href="#projects"><i class="fas fa-project-diagram"></i> Projects</a>
+        </li>
+        <li>
+          <a href="#resume"><i class="fas fa-file-alt"></i> Resume</a>
+        </li>
+        <li><button id="reset-particles"><i class="fas fa-sync-alt"></i> Reset Background</button></li>
+
+      </ul>
+    </nav>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider round"></div>
+      </label>
+      <em>Dark Mode</em>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="section fade-in reveal fade-right">
+      <h1>Data Science Portfolio</h1>
+      <h2>Akhilesh Pathange</h2>
+      <p>Fourth Year Data Science Student at College of William and Mary</p>
+      <div class="social-icons">
+        <a href="https://github.com/akhipath03" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/akhilesh-pathange" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="mailto:akhipath03@gmail.com"><i class="fas fa-envelope"></i></a>
       </div>
-    </header>
+    </section>
 
-    <main>
-      <section id="home" class="section fade-in reveal fade-right">
-        <h1>Data Science Portfolio</h1>
-        <h2>Akhilesh Pathange</h2>
-        <p>Fourth Year Data Science Student at College of William and Mary</p>
-        <div class="social-icons">
-          <a href="https://github.com/akhipath03" target="_blank"
-            ><i class="fab fa-github"></i
-          ></a>
-          <a
-            href="https://www.linkedin.com/in/akhilesh-pathange"
-            target="_blank"
-            ><i class="fab fa-linkedin"></i
-          ></a>
-          <a href="mailto:akhipath03@gmail.com"
-            ><i class="fas fa-envelope"></i
-          ></a>
+    <section id="about" class="section fade-in reveal fade-left">
+      <h2><i class="fas fa-user-circle"></i> About Me</h2>
+      <p>
+        <i class="fas fa-laptop-code"></i> I'm a passionate data science
+        student at the College of William and Mary, pursuing a B.S. in Data
+        Science with a minor in Mathematics. With a strong academic background
+        (GPA 3.95) and hands-on experience in various data science
+        technologies, I'm dedicated to leveraging data-driven insights to
+        solve complex problems.
+      </p>
+
+      <p>
+        <i class="fas fa-graduation-cap"></i> My coursework includes
+        Algorithms, Data Structures, Probability & Statistics for Scientists,
+        Advanced Applied Machine Learning, Statistical Data Analysis, Data
+        Visualization, Databases, Linear Algebra, and Discrete Mathematics,
+        providing me with a solid foundation in both theoretical and practical
+        aspects of data science.
+      </p>
+      <p>
+        <i class="fas fa-code"></i> I'm proficient in multiple programming
+        languages including Python, SQL, R, JavaScript, C++, HTML, and CSS. I
+        have experience with various data science tools and frameworks such as
+        SSMS, Snowflake, Pandas, Pytorch, Scikit-learn, Matplotlib, Seaborn,
+        Tableau, AWS, and React Native.
+      </p>
+      <p>
+        <i class="fas fa-briefcase"></i> Through my internships and projects,
+        I've gained practical experience in data analysis, machine learning,
+        and software development, always striving to create impactful
+        solutions backed by data.
+      </p>
+      <a href="https://github.com/akhipath03" class="github-link" target="_blank"><i class="fab fa-github"></i> Check
+        out my work on GitHub</a>
+    </section>
+
+    <section id="projects" class="section fade-in reveal fade-right">
+      <h2><i class="fas fa-project-diagram"></i> My Projects</h2>
+      <div class="project-grid">
+        <div class="project-card">
+          <h3>
+            <i class="fas fa-brain"></i> ALS Classification with Real-Time
+            Predictions
+          </h3>
+          <p>
+            A machine learning model for classifying ALS cases with real-time
+            prediction capabilities.
+          </p>
+          <a href="https://github.com/akhipath03/ASLClassification.github.io" class="project-link" target="_blank"><i
+              class="fas fa-external-link-alt"></i> View Project</a>
         </div>
-      </section>
-
-      <section id="about" class="section fade-in reveal fade-left">
-        <h2><i class="fas fa-user-circle"></i> About Me</h2>
-        <p>
-          <i class="fas fa-laptop-code"></i> I'm a passionate data science
-          student at the College of William and Mary, pursuing a B.S. in Data
-          Science with a minor in Mathematics. With a strong academic background
-          (GPA 3.95) and hands-on experience in various data science
-          technologies, I'm dedicated to leveraging data-driven insights to
-          solve complex problems.
-        </p>
-
-        <p>
-          <i class="fas fa-graduation-cap"></i> My coursework includes
-          Algorithms, Data Structures, Probability & Statistics for Scientists,
-          Advanced Applied Machine Learning, Statistical Data Analysis, Data
-          Visualization, Databases, Linear Algebra, and Discrete Mathematics,
-          providing me with a solid foundation in both theoretical and practical
-          aspects of data science.
-        </p>
-        <p>
-          <i class="fas fa-code"></i> I'm proficient in multiple programming
-          languages including Python, SQL, R, JavaScript, C++, HTML, and CSS. I
-          have experience with various data science tools and frameworks such as
-          SSMS, Snowflake, Pandas, Pytorch, Scikit-learn, Matplotlib, Seaborn,
-          Tableau, AWS, and React Native.
-        </p>
-        <p>
-          <i class="fas fa-briefcase"></i> Through my internships and projects,
-          I've gained practical experience in data analysis, machine learning,
-          and software development, always striving to create impactful
-          solutions backed by data.
-        </p>
-        <a
-          href="https://github.com/akhipath03"
-          class="github-link"
-          target="_blank"
-          ><i class="fab fa-github"></i> Check out my work on GitHub</a
-        >
-      </section>
-
-      <section id="projects" class="section fade-in reveal fade-right">
-        <h2><i class="fas fa-project-diagram"></i> My Projects</h2>
-        <div class="project-grid">
-          <div class="project-card">
-            <h3>
-              <i class="fas fa-brain"></i> ALS Classification with Real-Time
-              Predictions
-            </h3>
-            <p>
-              A machine learning model for classifying ALS cases with real-time
-              prediction capabilities.
-            </p>
-            <a
-              href="https://github.com/akhipath03/ASLClassification.github.io"
-              class="project-link"
-              target="_blank"
-              ><i class="fas fa-external-link-alt"></i> View Project</a
-            >
-          </div>
-          <div class="project-card">
-            <h3>
-              <i class="fas fa-mobile-alt"></i> Nutrition Insight Mobile App
-            </h3>
-            <p>
-              A mobile application providing nutritional information and
-              insights to users.
-            </p>
-            <a
-              href="https://github.com/akhipath03/LabelScanner"
-              class="project-link"
-              target="_blank"
-              ><i class="fas fa-external-link-alt"></i> View Project</a
-            >
-          </div>
-          <div class="project-card">
-            <h3>
-              <i class="fas fa-home"></i> New Jersey Residential Price
-              Projection System
-            </h3>
-            <p>
-              A system for projecting residential property prices in New Jersey
-              using advanced data analysis techniques.
-            </p>
-            <a
-              href="https://github.com/akhipath03/HouseDataProj"
-              class="project-link"
-              target="_blank"
-              ><i class="fas fa-external-link-alt"></i> View Project</a
-            >
-          </div>
-          <div class="project-card">
-            <h3>
-              <i class="fas fa-globe"></i> Global Food Systems and Gas Emissions
-            </h3>
-            <p>
-              An analysis of the relationship between global food systems and
-              greenhouse gas emissions.
-            </p>
-            <a
-              href="https://github.com/akhipath03/FoodEmissions.github.io/tree/main"
-              class="project-link"
-              target="_blank"
-              ><i class="fas fa-external-link-alt"></i> View Project</a
-            >
-          </div>
-          <div class="project-card">
-            <h3>
-              <i class="fas fa-chart-line"></i> Gradient Boosting Lowess vs
-              eXtreme Gradient Boosting Library
-            </h3>
-            <p>
-              A comparative study of Gradient Boosting Lowess and XGBoost
-              library performance.
-            </p>
-            <a
-              href="https://github.com/akhipath03/AdvMachineLearning/tree/main/HW2"
-              class="project-link"
-              target="_blank"
-              ><i class="fas fa-external-link-alt"></i> View Project</a
-            >
-          </div>
-          <div class="project-card">
-            <h3><i class="fas fa-cogs"></i> SCAD Regularization</h3>
-            <p>
-              Exploration and implementation of Smoothly Clipped Absolute
-              Deviation (SCAD) regularization technique.
-            </p>
-            <a
-              href="https://github.com/akhipath03/AdvMachineLearning/blob/main/HW3/Homework3.ipynb"
-              class="project-link"
-              target="_blank"
-              ><i class="fas fa-external-link-alt"></i> View Project</a
-            >
-          </div>
+        <div class="project-card">
+          <h3>
+            <i class="fas fa-mobile-alt"></i> Nutrition Insight Mobile App
+          </h3>
+          <p>
+            A mobile application providing nutritional information and
+            insights to users.
+          </p>
+          <a href="https://github.com/akhipath03/LabelScanner" class="project-link" target="_blank"><i
+              class="fas fa-external-link-alt"></i> View Project</a>
         </div>
-      </section>
-
-      <section id="resume" class="reveal fade-bottom">
-        <h2><i class="fas fa-file-alt"></i> Resume</h2>
-
-        <div class="timeline">
-          <!-- Timeline entries will be added here dynamically -->
+        <div class="project-card">
+          <h3>
+            <i class="fas fa-home"></i> New Jersey Residential Price
+            Projection System
+          </h3>
+          <p>
+            A system for projecting residential property prices in New Jersey
+            using advanced data analysis techniques.
+          </p>
+          <a href="https://github.com/akhipath03/HouseDataProj" class="project-link" target="_blank"><i
+              class="fas fa-external-link-alt"></i> View Project</a>
         </div>
-        <div class="resume-download">
-          <h3>Download Resume</h3>
-          <a href="Assets\resume.pdf" download class="download-btn"
-            ><i class="fas fa-file-pdf"></i> PDF</a
-          >
-          <a href="Assets\resume.docx" download class="download-btn"
-            ><i class="fas fa-file-word"></i> DOCX</a
-          >
+        <div class="project-card">
+          <h3>
+            <i class="fas fa-globe"></i> Global Food Systems and Gas Emissions
+          </h3>
+          <p>
+            An analysis of the relationship between global food systems and
+            greenhouse gas emissions.
+          </p>
+          <a href="https://github.com/akhipath03/FoodEmissions.github.io/tree/main" class="project-link"
+            target="_blank"><i class="fas fa-external-link-alt"></i> View Project</a>
         </div>
-      </section>
-    </main>
+        <div class="project-card">
+          <h3>
+            <i class="fas fa-chart-line"></i> Gradient Boosting Lowess vs
+            eXtreme Gradient Boosting Library
+          </h3>
+          <p>
+            A comparative study of Gradient Boosting Lowess and XGBoost
+            library performance.
+          </p>
+          <a href="https://github.com/akhipath03/AdvMachineLearning/tree/main/HW2" class="project-link"
+            target="_blank"><i class="fas fa-external-link-alt"></i> View Project</a>
+        </div>
+        <div class="project-card">
+          <h3><i class="fas fa-cogs"></i> SCAD Regularization</h3>
+          <p>
+            Exploration and implementation of Smoothly Clipped Absolute
+            Deviation (SCAD) regularization technique.
+          </p>
+          <a href="https://github.com/akhipath03/AdvMachineLearning/blob/main/HW3/Homework3.ipynb" class="project-link"
+            target="_blank"><i class="fas fa-external-link-alt"></i> View Project</a>
+        </div>
+      </div>
+    </section>
 
-    <footer>
-      <p>&copy; 2024 Data Science Portfolio. All rights reserved.</p>
-    </footer>
+    <section id="resume" class="reveal fade-bottom">
+      <h2><i class="fas fa-file-alt"></i> Resume</h2>
 
-    <script src="background.js"></script>
-    <script src="script.js"></script>
-  </body>
+      <div class="timeline">
+        <!-- Timeline entries will be added here dynamically -->
+      </div>
+      <div class="resume-download">
+        <h3>Download Resume</h3>
+        <a href="Assets\resume.pdf" download class="download-btn"><i class="fas fa-file-pdf"></i> PDF</a>
+        <a href="Assets\resume.docx" download class="download-btn"><i class="fas fa-file-word"></i> DOCX</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Data Science Portfolio. All rights reserved.</p>
+  </footer>
+
+  <script src="background.js"></script>
+  <script src="script.js"></script>
+</body>
+
 </html>

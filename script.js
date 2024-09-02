@@ -1,3 +1,16 @@
+// DOM Content Loaded Event Listeners
+document.addEventListener("DOMContentLoaded", (event) => {
+  // Initial fade-in effect
+  const faders = document.querySelectorAll(".fade-in");
+
+  faders.forEach((fader) => {
+    fader.classList.add("appear");
+  });
+
+  // Create timeline
+  createTimeline();
+});
+
 // Smooth scrolling
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
@@ -37,15 +50,6 @@ projectCards.forEach((card) => {
 window.addEventListener("scroll", () => {
   const header = document.querySelector("header");
   header.classList.toggle("scrolled", window.scrollY > 50);
-});
-
-// Initial fade-in effect
-document.addEventListener("DOMContentLoaded", (event) => {
-  const faders = document.querySelectorAll(".fade-in");
-
-  faders.forEach((fader) => {
-    fader.classList.add("appear");
-  });
 });
 
 // Reactive scrolling fade in/out effect
@@ -130,11 +134,6 @@ function createTimeline() {
     timeline.appendChild(timelineItem);
   });
 }
-
-// Call function when the DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
-  createTimeline();
-});
 
 // Dark mode toggle
 const toggleSwitch = document.querySelector(
